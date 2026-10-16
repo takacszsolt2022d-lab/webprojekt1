@@ -1,14 +1,14 @@
+//var express = require('express');
 import express from 'express';
-var router = express.Router();
+import UserController from '../controllers/userController.js';
 
-/* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const router = express.Router();
 
-router.get('/test', function(req, res, next) {
+router.get('/', UserController.getAll);
+router.get('/test', (req, res) => {
   res.send('respond with a test resource');
 });
-
+router.post('/', UserController.create);
+router.get('/:id', UserController.getById);
 
 export default router;

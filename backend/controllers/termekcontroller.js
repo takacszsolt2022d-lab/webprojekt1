@@ -1,61 +1,65 @@
-import termekModel from "../models/termekmodels.js";
+import TermekModel from '../models/termekmodels.js';
 
-const termekController = {
+const TermekController = {
   async getAllTermek(req, res) {
     try {
-      const termek = await termekModel.getAllTermek();
-      res.json(termek);
+      const termekek = await TermekModel.getAll();
+      res.json(termekek);
     } catch (error) {
-      console.error(error);
+      console.error('Error fetching products:', error);
       res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
   async getTermekById(req, res) {
+    const { id } = req.params;
+
     try {
-      const { id } = req.params;
-      const termek = await termekModel.getbyId(id);
-      if (!termek) {
-        return res.status(404).json({ error: 'Termék nem található' });
+      const termek = await TermekModel.getById(id);
+      if (termek) {
+        res.json(termek);
+      } else {
+        res.status(404).json({ error: 'Product not found' });
       }
-      return res.json(termek);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error fetching product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
   async createTermek(req, res) {
     try {
-      const termek = await termekModel.createTermek(req.body);
-      return res.status(201).json(termek);
+      const termek = await TermekModel.create(req.body);
+      res.status(201).json(termek);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error creating product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
   async updateTermek(req, res) {
+    const { id } = req.params;
+
     try {
-      const { id } = req.params;
-      const termek = await termekModel.updateTermek(id, req.body);
-      return res.json(termek);
+      const termek = await TermekModel.update(id, req.body);
+      res.json(termek);
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error updating product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
   },
 
   async deleteTermek(req, res) {
+    const { id } = req.params;
+
     try {
-      const { id } = req.params;
-      const result = await termekModel.deleteTermek(id);
-      return res.json(result);
+      await TermekModel.delete(id);
+      res.status(204).send();
     } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error deleting product:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-  }
+  },
 };
 
-export default termekController;
+export default TermekController;
